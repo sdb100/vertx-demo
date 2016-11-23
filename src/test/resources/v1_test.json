@@ -1,0 +1,41 @@
+{
+	"_v": "1",
+	"merchant_account_id": "example-merchant-account-id",
+	"session_id": "XyY8azgOHUE47HCz6fSBn3AsepzRXE3RbbZc5E5jsWO_xEymN7DlS4ktBrJPQzBY_nBUwSavMyc0fSWNJzu0SA==",
+	"order_no": "0000001",
+	"payment": {
+		"payment_id": "089e4cd378bff63d9d7bd63f8f",
+		"type": "ApplePay",
+		"amount": 1999,
+		"currency": "USD",
+		"token": "c90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ecc90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ecc90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ecc90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ecc90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ecc90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ecc90a1cc41f75098afee7d22437479cce29a036ba10452301af65243f57b937ec=="
+	},
+	"client": {
+		"ip_address": "127.0.0.1",
+		"user_agent": "Mozilla/5.0(X11;U;Linuxi686;en-US;rv:1.9)Gecko/2008052912Firefox/3.0",
+		"accept_header": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+	},
+	"customer_info": {
+		"customer_no": "1234567890",
+		"email": "john@doe.com",
+		"customer_name": "John Doe"
+	},
+	"shipping_address": {
+		"first_name": "John",
+		"last_name": "Doe",
+		"address1": "5 Wall Street",
+		"city": "Burlington",
+		"state_code": "MA",
+		"postal_code": "12345",
+		"country_code": "US"
+	},
+	"billing_address": {
+		"first_name": "John",
+		"last_name": "Doe",
+		"address1": "5 Wall Street",
+		"city": "Burlington",
+		"state_code": "MA",
+		"postal_code": "12345",
+		"country_code": "US"
+	}
+}
