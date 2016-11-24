@@ -49,6 +49,10 @@
 	</dependencies>
 
 	<build>
+  <defaultGoal>install</defaultGoal>
+  <directory>${basedir}/target/thin</directory>
+  <finalName>${artifactId}-${version}</finalName>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -80,7 +84,7 @@
 								</transformer>
 							</transformers>
 							<artifactSet />
-							<outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar</outputFile>
+							<outputFile>${project.build.directory}/../${project.artifactId}-${project.version}-fat.jar</outputFile>
 						</configuration>
 					</execution>
 				</executions>
