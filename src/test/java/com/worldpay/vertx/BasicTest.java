@@ -20,7 +20,7 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
  * declare a custom runner.
  */
 @RunWith(VertxUnitRunner.class)
-public class BasicTests {
+public class BasicTest {
 
 	@Rule
 	public Timeout rule = Timeout.seconds(5);
