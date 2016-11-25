@@ -8,19 +8,19 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
+/**
+ * A very simple demo application for vertx. Provides get and post endpoints 
+ * and listens on 8080.
+ * 
+ * @author Steve
+ *
+ */
 public class APIVerticle extends AbstractVerticle {
 
 	/**
-	 * This method is called when the verticle is deployed. It creates a HTTP
-	 * server and registers a simple request handler.
-	 * <p/>
-	 * Notice the `listen` method. It passes a lambda checking the port binding
-	 * result. When the HTTP server has been bound on the port, it call the
-	 * `complete` method to inform that the starting has completed. Else it
-	 * reports the error.
-	 *
-	 * @param fut
-	 *            the future
+	 * Start the server. This sets up routes and starts listening on a port.
+	 * Note that the server creation is asynchronous so the Future must be told
+	 * when the server is ready.
 	 */
 	@Override
 	public void start(Future<Void> fut) {
@@ -42,6 +42,12 @@ public class APIVerticle extends AbstractVerticle {
 				});
 	}
 	
+	/**
+	 * A route handler for the simple get operation. This just bounces the 
+	 * parameter back to the caller as text.
+	 * 
+	 * @param routingContext standard context data for the route.
+	 */
 	private void getHandler(RoutingContext routingContext) {
 		String param = routingContext.request().getParam("param");
 		HttpServerResponse response = routingContext.response();
@@ -50,6 +56,13 @@ public class APIVerticle extends AbstractVerticle {
 
 	}
 	
+	/**
+	 * A route handler for the post operation. This bounces the post block back to the caller as
+	 * json, with mime type application/json. There's no special error handling, so nonsense in will
+	 * yield nonsense out. 
+	 * 
+	 * @param routingContext standard context data for the route.
+	 */
 	private void postHandler(RoutingContext routingContext) {
 		JsonObject json = routingContext.getBodyAsJson();
 		HttpServerResponse response = routingContext.response();
