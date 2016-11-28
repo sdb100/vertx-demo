@@ -1,5 +1,7 @@
 package com.worldpay.vertx;
 
+import java.util.logging.Logger;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerResponse;
@@ -17,6 +19,8 @@ import io.vertx.ext.web.handler.BodyHandler;
  */
 public class APIVerticle extends AbstractVerticle {
 
+	private static final Logger LOGGER = Logger.getLogger(AbstractVerticle.class.getName());
+
 	/**
 	 * Start the server. This sets up routes and starts listening on a port.
 	 * Note that the server creation is asynchronous so the Future must be told
@@ -24,6 +28,8 @@ public class APIVerticle extends AbstractVerticle {
 	 */
 	@Override
 	public void start(Future<Void> fut) {
+
+		LOGGER.info("Starting server in directory: " + System.getProperty("user.dir") + "...");
 
 		Router router = Router.router(vertx);
 		router.get("/get/:param").handler(this::getHandler);
@@ -35,8 +41,10 @@ public class APIVerticle extends AbstractVerticle {
 				// default to 8080.
 				config().getInteger("http.port", 8080), result -> {
 					if (result.succeeded()) {
+						LOGGER.info("Server start complete.");
 						fut.complete();
 					} else {
+						LOGGER.info("Server start failed.");
 						fut.fail(result.cause());
 					}
 				});
