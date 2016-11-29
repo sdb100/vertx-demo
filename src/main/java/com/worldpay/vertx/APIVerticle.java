@@ -32,6 +32,9 @@ public class APIVerticle extends AbstractVerticle {
 		LOGGER.info("Starting server in directory: " + System.getProperty("user.dir") + "...");
 
 		Router router = Router.router(vertx);
+		router.get("/ping").handler(rc -> {
+			rc.response().putHeader("content-type", "text/plain").setStatusCode(200).end("pong");
+		});
 		router.get("/get/:param").handler(this::getHandler);
 		router.post("/post").handler(BodyHandler.create());
 		router.post("/post").handler(this::postHandler);
