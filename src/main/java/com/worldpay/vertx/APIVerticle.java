@@ -1,5 +1,6 @@
 package com.worldpay.vertx;
 
+import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 import io.vertx.core.AbstractVerticle;
@@ -28,8 +29,10 @@ public class APIVerticle extends AbstractVerticle {
 	 */
 	@Override
 	public void start(Future<Void> fut) {
-
-		LOGGER.info("Starting server in directory: " + System.getProperty("user.dir") + "...");
+		
+		
+		int port = config().getInteger("http.port", 8080);
+		LOGGER.info(MessageFormat.format("Starting server in directory: {0} on port {1}...", System.getProperty("user.dir"), port));
 
 		Router router = Router.router(vertx);
 		router.get("/ping").handler(rc -> {
@@ -39,10 +42,7 @@ public class APIVerticle extends AbstractVerticle {
 		router.post("/post").handler(BodyHandler.create());
 		router.post("/post").handler(this::postHandler);
 
-		vertx.createHttpServer().requestHandler(router::accept).listen(
-				// Retrieve the port from the configuration,
-				// default to 8080.
-				config().getInteger("http.port", 8080), result -> {
+		vertx.createHttpServer().requestHandler(router::accept).listen(port, result -> {
 					if (result.succeeded()) {
 						LOGGER.info("Server start complete.");
 						fut.complete();
