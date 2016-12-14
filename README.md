@@ -14,6 +14,8 @@ It responds to a few endpoints:
 - /get/_param_ -- executes the param as a Cassandra CQL statement
 - /post -- takes a block of json in the payload, and just bounces it back
 
-Hint: docker run -p 127.0.0.1:9042:9042 --name my-cass -d cassandra:3.0
-Hint: cqlsh -f ./db.cql
-§
+Hints:
+
+- docker run -p 127.0.0.1:9042:9042 --name my-cass -d cassandra:3.0
+- cqlsh -f ./db.cql
+
