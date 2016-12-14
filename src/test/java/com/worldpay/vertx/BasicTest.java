@@ -69,18 +69,18 @@ public class BasicTest {
 			});
 		});
 	}
-	
+
 	@Test
-	public void testPostJson(TestContext context) throws Exception{
+	public void testPostJson(TestContext context) throws Exception {
 		// This test is asynchronous, so get an async handler to inform the test
 		// when we are done.
 		final Async async = context.async();
-		
+
 		ClassLoader classLoader = getClass().getClassLoader();
-        String json = new String(Files.readAllBytes(Paths.get(classLoader.getResource("v1_test.json").getFile())));
-        context.assertNotNull(json);
-		//System.out.println("Payload: " + json);
-		
+		String json = new String(Files.readAllBytes(Paths.get(classLoader.getResource("v1_test.json").getFile())));
+		context.assertNotNull(json);
+		// System.out.println("Payload: " + json);
+
 		vertx.createHttpClient().post(8080, "localhost", "/post", response -> {
 			response.handler(body -> {
 				System.out.println("Body from POST: " + body);
@@ -88,20 +88,5 @@ public class BasicTest {
 				async.complete();
 			});
 		}).setChunked(true).end(json);
-	}
-	
-	@Test
-	public void testGetParameter(TestContext context) throws Exception{
-		// This test is asynchronous, so get an async handler to inform the test
-		// when we are done.
-		final Async async = context.async();
-		
-		vertx.createHttpClient().get(8080, "localhost", "/get/{testParam}", response -> {
-			response.handler(body -> {
-				System.out.println("Body from GET: " + body);
-				context.assertEquals("text/plain", response.getHeader("content-type"));
-				async.complete();
-			});
-		}).setChunked(true).end();
 	}
 }

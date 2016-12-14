@@ -6,8 +6,11 @@ mvn clean install
 ```
 Then execute the fatjar in the target dir with java -jar
 
+It's now hooked into Cassandra, so the _get_ endpoint won't work unless you have a node started with a keyspace called _dev_. 
+
 It responds to a few endpoints:
 
 - /ping -- returns _pong_
-- /get/_param_ -- returns the contents of the param
+- /get/_param_ -- executes the param as a Cassandra CQL statement
 - /post -- takes a block of json in the payload, and just bounces it back
+§

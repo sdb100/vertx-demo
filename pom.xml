@@ -31,6 +31,11 @@
 			<classifier>sources</classifier>
 			<version>3.3.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.datastax.cassandra</groupId>
+			<artifactId>cassandra-driver-core</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 
 
 		<!-- For the tests -->
@@ -49,9 +54,9 @@
 	</dependencies>
 
 	<build>
-  <defaultGoal>install</defaultGoal>
-  <directory>${basedir}/target/thin</directory>
-  <finalName>${artifactId}-${version}</finalName>
+		<defaultGoal>install</defaultGoal>
+		<directory>${basedir}/target/thin</directory>
+		<finalName>${artifactId}-${version}</finalName>
 
 		<plugins>
 			<plugin>
