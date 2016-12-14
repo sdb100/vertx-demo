@@ -41,6 +41,8 @@ public class APIVerticle extends AbstractVerticle {
     private Vertx vertx;
     private Context context;
 
+    private long counter = 0;
+
     /**
      * Start the server. This sets up routes and starts listening on a port.
      * Note that the server creation is asynchronous so the Future must be told
@@ -50,10 +52,10 @@ public class APIVerticle extends AbstractVerticle {
     public void start(Future<Void> fut) {
         this.vertx = this.getVertx();
         this.context = vertx.getOrCreateContext();
-        
-        try{
+
+        try {
             this.connector = new CassandraConnector();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Cassandra failed to start");
         }
 
@@ -82,42 +84,50 @@ public class APIVerticle extends AbstractVerticle {
     }
 
     /**
-     * A route handler for the simple get operation. This executes the given string as a Cassandra CQL statement.
+     * A route handler for the simple get operation. This executes the given
+     * string as a Cassandra CQL statement.
      * 
      * @param routingContext
      *            standard context data for the route.
      */
     private void getHandler(RoutingContext routingContext) {
         HttpServerResponse response = routingContext.response();
-        if(this.connector == null){
+        LOGGER.info(MessageFormat.format("GET request running on {0}: {1}", Thread.currentThread(), ++this.counter));
+        if (this.connector == null) {
             response.end("Cassandra not running");
-        }else{
+        } else {
             String statement = routingContext.request().getParam("param");
             Session session = this.connector.getSession();
-    
+
             ListenableFuture<ResultSet> resultSetFuture = session.executeAsync(statement);
             CompletableFuture<String> f = new CompletableFuture<>();
-    
+
             Futures.addCallback(resultSetFuture, new FutureCallback<ResultSet>() {
                 public void onSuccess(ResultSet r) {
+                    LOGGER.info(MessageFormat.format("GET callback running on {0}: {1}", Thread.currentThread(), counter));
+
                     List<Row> rows = r.all();
-    
-                    String result = rows.stream().collect(StringBuffer::new,
-                            (sb, row) -> sb.append(row.getString(NAME)).append(":").append(row.getString(VALUE)).append("\n"),
-                            (sb1, sb2) -> sb1.append(sb2)).toString();
-    
+
+                    String result = rows.stream()
+                            .collect(StringBuffer::new, 
+                                    (sb, row) -> sb.append(row.getString(NAME)).append(":")
+                                        .append(row.getString(VALUE)).append("\n"), 
+                                    (sb1, sb2) -> sb1.append(sb2))
+                            .toString();
+
                     response.putHeader("content-type", "text/plain").setStatusCode(200);
                     response.end(result);
-    
-                   f.complete(result); // surplus to requirements really
+
+                    f.complete(result); // surplus to requirements really
                 }
-    
+
                 public void onFailure(Throwable thrown) {
+                    LOGGER.info(MessageFormat.format("GET callback running on {0}: {1}", Thread.currentThread(), counter));
                     response.setStatusCode(500).end(thrown.getMessage());
                     f.completeExceptionally(thrown); // not really needed
                 }
-            }, (r) -> context.runOnContext((v) -> r.run())); // run on the verticle thread
-         }
+            }, (r) -> context.runOnContext((v) -> r.run())); // run on the verticle event loop thread
+        }
     }
 
     /**
