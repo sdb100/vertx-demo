@@ -55,11 +55,6 @@ public class APIVerticle extends AbstractVerticle {
         this.context = vertx.getOrCreateContext();
 
         try {
-            LOGGER.info("env vars:");
-
-            System.getenv().forEach((k, v) -> {
-                LOGGER.info(k + ":" + v);
-            });
             this.connector = new CassandraConnector();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Cassandra failed to start", e);

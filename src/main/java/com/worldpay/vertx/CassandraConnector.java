@@ -22,6 +22,8 @@ public class CassandraConnector {
 
     private Cluster cluster;
     private Session session;
+    
+    private String cassandraIP = "127.0.0.1";
 
 //    private static final int FIVE = 5;
 
@@ -29,9 +31,14 @@ public class CassandraConnector {
         PoolingOptions poolingOptions = new PoolingOptions();
         poolingOptions.setConnectionsPerHost(HostDistance.LOCAL, 4, 10);
         poolingOptions.setMaxRequestsPerConnection(HostDistance.LOCAL, 10000);
+        
+        String ip = System.getenv("CASSANDRA_CDK_SERVICE_HOST");
+        if(ip != null){
+            this.cassandraIP = ip;
+        }
 
         cluster = Cluster.builder()
-                .addContactPoint("127.0.0.1")
+                .addContactPoint(this.cassandraIP)
                 .withLoadBalancingPolicy(new RoundRobinPolicy())
                 .withPoolingOptions(poolingOptions)
                 .build();
