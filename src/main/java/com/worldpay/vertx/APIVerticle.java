@@ -3,6 +3,7 @@ package com.worldpay.vertx;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.datastax.driver.core.ResultSet;
@@ -56,7 +57,7 @@ public class APIVerticle extends AbstractVerticle {
         try {
             this.connector = new CassandraConnector();
         } catch (Exception e) {
-            System.out.println("Cassandra failed to start");
+            LOGGER.log(Level.SEVERE, "Cassandra failed to start", e);
         }
 
         int port = config().getInteger("http.port", 8080);
