@@ -55,7 +55,11 @@ public class APIVerticle extends AbstractVerticle {
         this.context = vertx.getOrCreateContext();
 
         try {
-            LOGGER.info("Cassandra host: " + System.getenv("OPENSHIFT_CASSANDRA-CDK_HOST"));
+            LOGGER.info("env vars:");
+
+            System.getenv().forEach((k, v) -> {
+                LOGGER.info(k + ":" + v);
+            });
             this.connector = new CassandraConnector();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Cassandra failed to start", e);
