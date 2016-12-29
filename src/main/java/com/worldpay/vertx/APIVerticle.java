@@ -36,7 +36,7 @@ public class APIVerticle extends AbstractVerticle {
 
     private static final String NAME = "name";
     private static final String VALUE = "value";
-
+    
     private CassandraConnector connector;
 
     private Vertx vertx;
@@ -105,25 +105,29 @@ public class APIVerticle extends AbstractVerticle {
 
             Futures.addCallback(resultSetFuture, new FutureCallback<ResultSet>() {
                 public void onSuccess(ResultSet r) {
-                    LOGGER.info(MessageFormat.format("GET callback running on {0}: {1}", Thread.currentThread(), counter));
+                    LOGGER.info(MessageFormat.format("GET callback (success) running on {0}: {1}", Thread.currentThread(), counter));
 
                     List<Row> rows = r.all();
+                    
+                    String result = "no results";
 
-                    String result = rows.stream()
-                            .collect(StringBuffer::new, 
-                                    (sb, row) -> sb.append(row.getString(NAME)).append(":")
-                                        .append(row.getString(VALUE)).append("\n"), 
-                                    (sb1, sb2) -> sb1.append(sb2))
-                            .toString();
+                    if(!rows.isEmpty()){
+                        result = rows.stream()
+                                .collect(StringBuffer::new, 
+                                            (sb, row) -> sb.append(row.getString(NAME)).append(":")
+                                                .append(row.getString(VALUE)).append("\n"), 
+                                            (sb1, sb2) -> sb1.append(sb2))
+                                    .toString();
+                    }
 
                     response.putHeader("content-type", "text/plain").setStatusCode(200);
                     response.end(result);
 
                     f.complete(result); // surplus to requirements really
                 }
-
+                    
                 public void onFailure(Throwable thrown) {
-                    LOGGER.info(MessageFormat.format("GET callback running on {0}: {1}", Thread.currentThread(), counter));
+                    LOGGER.info(MessageFormat.format("GET callback (failure) running on {0}: {1}", Thread.currentThread(), counter));
                     response.setStatusCode(500).end(thrown.getMessage());
                     f.completeExceptionally(thrown); // not really needed
                 }

@@ -1,11 +1,14 @@
 package com.worldpay.vertx;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
+
+import com.datastax.driver.core.ResultSet;
 
 import io.vertx.core.Vertx;
 import io.vertx.ext.unit.Async;
@@ -55,6 +58,15 @@ public class CassandraTest {
 
     // assumes there's a running cassandra set to use the dev keyspace with a
     // name/value table - I haven't mocked it with cassandraunit yet
+    
+    @Test
+    public void testStatement(TestContext context) throws Exception {
+        CassandraConnector c = new CassandraConnector();
+        String s = "select * from name_value";
+        ResultSet r = c.getSession().execute(s);
+        Assert.assertNotNull(r);
+    }
+
     @Test
     public void testGetParameter(TestContext context) throws Exception {
         // This test is asynchronous, so get an async handler to inform the test
@@ -71,6 +83,5 @@ public class CassandraTest {
             });
         }).setChunked(true).end();
     }
-
 
 }

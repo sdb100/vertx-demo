@@ -20,30 +20,39 @@ public class CassandraConnector {
 
     private static final Logger LOG = LoggerFactory.getLogger(CassandraConnector.class);
 
+    private static final String KEYSPACE = "create keyspace if not exists dev with replication = {'class':'SimpleStrategy', 'replication_factor':1}";
+    private static final String DEV = "use dev";
+    private static final String TABLE = "create table if not exists name_value( name text PRIMARY KEY, value text)";
+ 
     private Cluster cluster;
     private Session session;
     
     private String cassandraIP = "127.0.0.1";
-
-//    private static final int FIVE = 5;
 
     public CassandraConnector() {
         PoolingOptions poolingOptions = new PoolingOptions();
         poolingOptions.setConnectionsPerHost(HostDistance.LOCAL, 4, 10);
         poolingOptions.setMaxRequestsPerConnection(HostDistance.LOCAL, 10000);
         
-        String ip = System.getenv("CASSANDRA_CDK_SERVICE_HOST");
+        String ip = System.getenv("CASSANDRA_CDK_SERVICE_HOST"); // Magical value from openshift
         if(ip != null){
             this.cassandraIP = ip;
         }
-
+        
         cluster = Cluster.builder()
                 .addContactPoint(this.cassandraIP)
                 .withLoadBalancingPolicy(new RoundRobinPolicy())
                 .withPoolingOptions(poolingOptions)
                 .build();
+        
+        session = cluster.connect();
+        session.execute(KEYSPACE);
+        session.execute(DEV);
+        session.execute(TABLE);
+        session.close();
+        
         session = cluster.connect("dev");
-
+        
 //        if (properties.isMonitorPoolUsage()) {
 //            monitor();
 //        }
