@@ -14,8 +14,14 @@ It responds to a few endpoints:
 - /get/_param_ -- executes the param as a Cassandra CQL statement
 - /post -- takes a block of json in the payload, and just bounces it back
 
+Try:
+```
+/get/insert into name_value (name,value) values ('testname','testval')
+/get/select * from name_value
+```
+
 Hints:
 
-- docker run -p 127.0.0.1:9042:9042 --name my-cass -d cassandra:3.0
+- docker run -p 127.0.0.1:9042:9042 --name my-cass -d cassandra
 - cqlsh -f ./db.cql
 
